@@ -2,17 +2,21 @@ import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
-    static ArrayList<String> a = null;
-    static ArrayList<String> b = null;
+public class Main extends Thread {
+
+    static String[] b = {"consectetur", "vulputate", "morbi", "Quam", "pharetra", "condimentum", "sadasdasdasd"};
     static HashSet<String> c = null;
 
-    static Scanner in = new Scanner(System.in);
+    String fileName = null;
+
+    protected Main (String file) {
+        fileName = file;
+    }
 
     protected static void searchInFile(String filename) throws FileNotFoundException, IOException {
+
         File file = null;
 
         try {
@@ -34,17 +38,34 @@ public class Main {
             c.clear();
         }
     }
-    public static void main(String[] args) throws ArrayIndexOutOfBoundsException, FileNotFoundException, IOException {
 
-        Files f = new Files();
-        StringKeys sk = new StringKeys();
+    public void run() {
 
-        a = f.getFiles(in);
-        b = sk.read(in);
+            try {
+                Main.searchInFile(fileName);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    public static void main(String[] args) throws ArrayIndexOutOfBoundsException, FileNotFoundException, IOException, InterruptedException {
+
+        // String[] a = {"consectetur", "vulputate", "morbi", "Quam", "pharetra", "condimentum", "sadasdasdasd"};
+        // b = new ArrayList<String>();
+        // b.addAll(Arrays.asList(a));
         c = new HashSet<>();
 
-        for (String file : a) {
-            Main.searchInFile(file);
-        }
+        Main t1 = new Main("sample.txt");
+        Main t2 = new Main("sample2.txt");
+        Main t3 = new Main("sample3.txt");
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
     }
 }
